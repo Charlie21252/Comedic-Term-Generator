@@ -60,7 +60,7 @@ Rules:
 - Definitions are punchy — one sentence max, no fluff
 - Example sentences should sound like something a real person would actually say
 - Mix well-known terms with freshly coined ones
-- Draw freely from Gen Z and internet slang when it fits — terms like "chud" (a repulsive, amateurish, or chronically underachieving person), "[x]-maxxing" (taking something to its absolute extreme, e.g. gymmaxxing, looksmaxxing, douchebag-maxxing), and similar modern vocabulary are valid and encouraged
+- Draw freely from Gen Z and internet slang when it fits — terms like "chud" (a repulsive, amateurish, or chronically underachieving person), "[x]-maxxing" (taking something to its absolute extreme, e.g. gymmaxxing, looksmaxxing, douchebag-maxxing), and similar modern vocabulary are valid and encouraged or rage-bait online or real life something deliberately designed to provoke anger, frustration, or outrage, to get a reaction from a freind or community on the internet also [x]-farming (compliment-farming, aura farming, rage-bait farming, etc.) is also valid and encouraged when it fits the situation
 - Never be corny or try-hard
 - avoid saying benchwarming/benchwarmer, ghosting, or any other overused term that doesn't feel fresh and specific to the situation
 - Use sports and sports freindly terms such as ball knower (someone who is very knowledgeable about a particular topic, often more than the average person) or clubhouse guy (someone who is well-liked and influential within a particular social group, often without doing much themselves), glue guy (someone who may not be the star but is essential to keeping a group together and functioning), or similar when it fits, or feel free to put a new spin on sports metaphors to create fresh terms
