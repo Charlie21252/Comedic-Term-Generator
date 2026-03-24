@@ -23,20 +23,32 @@ import { NextRequest, NextResponse } from "next/server";
 import { checkRateLimit } from "@/lib/rateLimit";
 import { validateBody } from "@/lib/validate";
 
-// ─── API Key Check ────────────────────────────────────────────────────────────
-// Fail at module load time rather than silently sending unauthenticated requests.
-// This surfaces misconfiguration immediately during development startup.
-if (!process.env.ANTHROPIC_API_KEY) {
-  throw new Error(
-    "[generate-term] ANTHROPIC_API_KEY is not set. " +
-    "Add it to .env.local and restart the dev server. " +
-    "Never expose this key client-side or commit it to version control."
-  );
-}
+// ─── Lazy Client ─────────────────────────────────────────────────────────────
+// The Anthropic client is created on first request, not at module load time.
+// Reason: Next.js evaluates route modules during `next build` to collect page
+// data. At that point Vercel environment variables are not yet injected, so a
+// module-level key check would throw and fail the build even though the key
+// is correctly configured in Vercel's dashboard.
+//
+// The key is read from process.env.ANTHROPIC_API_KEY (set in .env.local for
+// local dev, or in Vercel → Project Settings → Environment Variables for
+// production). It has no NEXT_PUBLIC_ prefix so it is never sent to the browser.
+let _client: Anthropic | null = null;
 
-// The SDK automatically reads ANTHROPIC_API_KEY from process.env.
-// Do NOT pass the key directly in code — env var only (OWASP A02).
-const client = new Anthropic();
+function getClient(): Anthropic {
+  if (!process.env.ANTHROPIC_API_KEY) {
+    // This runs at request time, not build time — safe to throw here.
+    throw new Error(
+      "[generate-term] ANTHROPIC_API_KEY is not set. " +
+      "Add it to .env.local (local) or Vercel Environment Variables (production). " +
+      "Never expose this key client-side or commit it to version control."
+    );
+  }
+  if (!_client) {
+    _client = new Anthropic();
+  }
+  return _client;
+}
 
 // ─── System Prompt ────────────────────────────────────────────────────────────
 const SYSTEM_PROMPT = `You are a cultural linguist and comedy writer who specializes in naming things that don't have names yet — or finding the perfect existing term for a situation. You have a deep knowledge of slang, internet culture, psychology, philosophy, sports, chess, music, and everyday human behavior. Your terms are sharp, memorable, and feel instantly correct when you hear them.
@@ -124,7 +136,7 @@ export async function POST(req: NextRequest) {
   // `validation.situation` is trimmed, sanitized, and within length limits.
   // The API key is server-side only — it is never included in the response.
   try {
-    const message = await client.messages.create({
+    const message = await getClient().messages.create({
       model: "claude-sonnet-4-20250514",
       max_tokens: 1024,
       system: SYSTEM_PROMPT,
