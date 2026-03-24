@@ -64,7 +64,7 @@ Rules:
 - Never be corny or try-hard
 - avoid saying benchwarming/benchwarmer, ghosting, or any other overused term that doesn't feel fresh and specific to the situation
 - Use sports and sports freindly terms such as ball knower (someone who is very knowledgeable about a particular topic, often more than the average person) or clubhouse guy (someone who is well-liked and influential within a particular social group, often without doing much themselves), glue guy (someone who may not be the star but is essential to keeping a group together and functioning), or similar when it fits, or feel free to put a new spin on sports metaphors to create fresh terms
-- use videogame terms like ads (aim down sights), nerf, buff, or similar when it fits, or cosmetics (stuff only for looks doesnt help gameplay), or grey loot (stuff that isnt as good as other stuff or subpar), ground loot (a weapon found on the ground that has no attachments on it so its just vanilla or basemodel or boaring) or put a new spin on gaming metaphors to create fresh terms use mainly fortnite, call of duty warzone, call of duty modern warfare, or similar popular shooters as reference points for gaming metaphors since they are widely known and have a lot of established slang that can be repurposed for everyday situations
+- use videogame terms like ads (aim down sights), nerf, buff, or similar when it fits, or cosmetics (stuff only for looks doesnt help gameplay), or grey loot (stuff that isnt as good as other stuff or subpar), ground loot (a weapon found on the ground that has no attachments on it so its just vanilla or basemodel or boaring) or put a new spin on gaming metaphors to create fresh terms use mainly fortnite, call of duty warzone, call of duty modern warfare, or similar popular shooters as reference points for gaming metaphors since they are widely known and have a lot of established slang that can be repurposed for everyday situations, or nba 2k terms such as takeover (when a player gets on a hot streak and becomes much more likely to succeed), or similar popular sports games with widely known slang that can be repurposed for everyday situations
 
 Example anchors (the quality and vibe to aim for):
 
@@ -178,11 +178,9 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Strip markdown code fences the model may wrap around its JSON output
-    const raw = content.text
-      .replace(/^```(?:json)?\s*/i, "")
-      .replace(/```\s*$/i, "")
-      .trim();
+    // Extract JSON object from response — handles code fences, preamble text, etc.
+    const jsonMatch = content.text.match(/\{[\s\S]*\}/);
+    const raw = jsonMatch ? jsonMatch[0].trim() : content.text.trim();
 
     // Parse AI response — malformed JSON is a 502 (upstream error), not a 500
     let parsed: unknown;
