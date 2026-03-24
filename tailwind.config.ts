@@ -9,8 +9,18 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        background: "var(--background)",
-        foreground: "var(--foreground)",
+        accent: "#5E6AD2",
+      },
+      fontFamily: {
+        archivo: ["Archivo", "sans-serif"],
+        grotesk: ["Space Grotesk", "system-ui", "sans-serif"],
+      },
+      transitionTimingFunction: {
+        smooth: "cubic-bezier(0.16, 1, 0.3, 1)",
+      },
+      boxShadow: {
+        "accent-glow": "0 0 32px rgba(94, 106, 210, 0.18)",
+        "accent-glow-md": "0 0 48px rgba(94, 106, 210, 0.25)",
       },
     },
   },

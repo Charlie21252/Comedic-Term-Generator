@@ -1,27 +1,42 @@
+@import url('https://fonts.googleapis.com/css2?family=Archivo:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --bg-deep: #020203;
+  --bg-base: #0a0a0f;
+  --accent: #5E6AD2;
+  --accent-glow: rgba(94, 106, 210, 0.18);
+  --surface: rgba(255, 255, 255, 0.04);
+  --border: rgba(255, 255, 255, 0.08);
+  --foreground: #EDEDEF;
+  --foreground-muted: #8A8F98;
+  --easing: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+* {
+  box-sizing: border-box;
 }
 
 body {
+  font-family: 'Space Grotesk', system-ui, sans-serif;
+  background: linear-gradient(160deg, var(--bg-base) 0%, var(--bg-deep) 100%);
+  background-attachment: fixed;
   color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  min-height: 100dvh;
+  -webkit-font-smoothing: antialiased;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
 }
 
 @layer utilities {
-  .text-balance {
-    text-wrap: balance;
-  }
+  .font-archivo { font-family: 'Archivo', sans-serif; }
+  .easing-smooth { transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1); }
 }
