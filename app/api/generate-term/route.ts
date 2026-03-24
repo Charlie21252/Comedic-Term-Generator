@@ -137,7 +137,7 @@ export async function POST(req: NextRequest) {
   // The API key is server-side only — it is never included in the response.
   try {
     const message = await getClient().messages.create({
-      model: "claude-sonnet-4-20250514",
+      model: "claude-sonnet-4-6",
       max_tokens: 1024,
       system: SYSTEM_PROMPT,
       messages: [{ role: "user", content: validation.situation }],
