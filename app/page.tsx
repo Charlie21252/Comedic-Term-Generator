@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import TermForm from "@/components/TermForm";
 import TermCard from "@/components/TermCard";
 
@@ -61,6 +62,25 @@ export default function Home() {
 
   return (
     <main className="min-h-dvh">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "WebApplication",
+            name: "Comedic Term Generator",
+            description:
+              "Describe any situation and instantly get clever, witty terms for it.",
+            url: "https://comedicterm.com/",
+            applicationCategory: "EntertainmentApplication",
+            offers: {
+              "@type": "Offer",
+              price: "free",
+              priceCurrency: "USD",
+            },
+          }),
+        }}
+      />
       {/* Ambient blob — decorative, hidden from screen readers */}
       <div aria-hidden="true" className="fixed inset-0 pointer-events-none overflow-hidden">
         <div
@@ -177,6 +197,19 @@ export default function Home() {
           </section>
         )}
       </div>
+
+      {/* Footer */}
+      <footer className="pb-8 text-center">
+        <Link
+          href="/examples"
+          className="text-xs font-medium tracking-[0.08em] uppercase transition-colors duration-200"
+          style={{ color: "var(--foreground-muted)" }}
+          onMouseEnter={e => ((e.currentTarget as HTMLAnchorElement).style.color = "var(--foreground)")}
+          onMouseLeave={e => ((e.currentTarget as HTMLAnchorElement).style.color = "var(--foreground-muted)")}
+        >
+          Examples
+        </Link>
+      </footer>
     </main>
   );
 }
