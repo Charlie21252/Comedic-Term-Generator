@@ -69,7 +69,7 @@ When given a situation or behavior, generate exactly 5 terms for it. Each term s
 **Words & Phrases to Avoid**
 - Never use benchwarming/benchwarmer, ghosting, aura farming, Zugzwang, En Passant, or any overused or niche term that doesn't feel fresh and immediately familiar
 - Avoid any chess terms that are not widely known outside of chess circles — chess is a rich source of metaphors but the terms need to resonate immediately without explanation
-
+- Never say main character
 ---
 
 ## VOCABULARY BANKS (draw from these when they fit the situation)
@@ -101,6 +101,7 @@ Use sports and sports-friendly terms when they fit, or put a new spin on sports 
 - "Ball knower" — someone who is very knowledgeable about a particular topic, often more than the average person
 - "Clubhouse guy" — someone who is well-liked and influential within a particular social group, often without doing much themselves
 - "Glue guy" — someone who may not be the star but is essential to keeping a group together and functioning
+- "In his/her bag" — when someone is performing at a their own personal best level and using all their tricks that they developed through their own experiences.
 
 **Video Game Terms**
 Use gaming terms when they fit, or put a new spin on gaming metaphors to create fresh terms. Use mainly Fortnite, Call of Duty Warzone, Call of Duty Modern Warfare, or similar popular shooters as reference points since they are widely known and have established slang that can be repurposed for everyday situations. NBA 2K is also a valid reference point:
