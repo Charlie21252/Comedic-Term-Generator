@@ -15,28 +15,37 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ success: false, message: "License key is required." }, { status: 400 });
   }
 
-  const key = licenseKey.trim();
+  // Aggressively sanitize — strip all whitespace including newlines (common on mobile paste)
+  const key = licenseKey.replace(/\s+/g, "").toUpperCase();
+
+  const productId = process.env.GUMROAD_PRODUCT_ID ?? "";
+
+  if (!productId) {
+    console.error("[verify-license] GUMROAD_PRODUCT_ID is not set");
+    return NextResponse.json(
+      { success: false, message: "Server misconfiguration. Please contact support." },
+      { status: 500 }
+    );
+  }
 
   try {
     const gumroadRes = await fetch("https://api.gumroad.com/v2/licenses/verify", {
       method: "POST",
       headers: { "Content-Type": "application/x-www-form-urlencoded" },
       body: new URLSearchParams({
-        product_id: process.env.GUMROAD_PRODUCT_ID ?? "",
+        product_id: productId,
         license_key: key,
         increment_uses_count: "false",
       }),
     });
 
-    // Gumroad returns 404 for invalid keys, 200 for valid
-    if (!gumroadRes.ok) {
-      return NextResponse.json({ success: false, message: "Invalid license key." });
-    }
+    const gumroadData = await gumroadRes.json().catch(() => null);
 
-    const gumroadData = await gumroadRes.json();
+    console.log("[verify-license] Gumroad status:", gumroadRes.status, "body:", JSON.stringify(gumroadData));
 
-    if (!gumroadData.success) {
-      return NextResponse.json({ success: false, message: "Invalid license key." });
+    if (!gumroadRes.ok || !gumroadData?.success) {
+      const reason = gumroadData?.message ?? "Invalid license key.";
+      return NextResponse.json({ success: false, message: reason });
     }
 
     // Save to MongoDB if not already stored

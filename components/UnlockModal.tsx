@@ -27,7 +27,7 @@ export default function UnlockModal({ onClose }: { onClose: () => void }) {
         localStorage.setItem("licenseKey", key.trim());
         window.location.reload();
       } else {
-        setError("Invalid or already used license key.");
+        setError(data.message ?? "Invalid or already used license key.");
       }
     } catch {
       setError("Could not verify key. Check your connection and try again.");
