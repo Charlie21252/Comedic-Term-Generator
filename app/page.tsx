@@ -191,7 +191,7 @@ export default function Home() {
 
             <div className="flex flex-col gap-3">
               {terms.map((term, i) => (
-                <TermCard key={i} term={term} index={i} />
+                <TermCard key={i} term={term} index={i} situation={lastSituation} />
               ))}
             </div>
           </section>

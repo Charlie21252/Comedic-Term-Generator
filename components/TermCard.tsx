@@ -17,15 +17,42 @@ const ACCENTS = [
   { from: "#059669", to: "#6EE7B7" }, // emerald
 ];
 
-export default function TermCard({ term, index }: { term: Term; index: number }) {
-  const [copied, setCopied] = useState(false);
-  const [hovered, setHovered] = useState(false);
+export default function TermCard({
+  term,
+  index,
+  situation,
+}: {
+  term: Term;
+  index: number;
+  situation: string | null;
+}) {
+  const [copied, setCopied]     = useState(false);
+  const [hovered, setHovered]   = useState(false);
+  const [voted, setVoted]       = useState<"like" | "dislike" | null>(null);
+  const [voting, setVoting]     = useState(false);
   const accent = ACCENTS[index % ACCENTS.length];
 
   const handleCopy = async () => {
     await navigator.clipboard.writeText(term.term);
     setCopied(true);
     setTimeout(() => setCopied(false), 2200);
+  };
+
+  const handleVote = async (vote: "like" | "dislike") => {
+    if (voted || voting || !situation) return;
+    setVoting(true);
+    try {
+      await fetch("/api/feedback", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ term: term.term, situation, vote }),
+      });
+      setVoted(vote);
+    } catch {
+      // Silently fail — feedback is non-critical
+    } finally {
+      setVoting(false);
+    }
   };
 
   return (
@@ -121,6 +148,65 @@ export default function TermCard({ term, index }: { term: Term; index: number })
         >
           &ldquo;{term.example}&rdquo;
         </p>
+
+        {/* Feedback */}
+        {situation && (
+          <div className="flex items-center gap-2 mt-1">
+            {voted ? (
+              <span
+                className="font-grotesk text-xs"
+                style={{ color: "var(--foreground-muted)" }}
+              >
+                thanks for the feedback
+              </span>
+            ) : (
+              <>
+                <button
+                  onClick={() => handleVote("like")}
+                  disabled={voting}
+                  aria-label="Like this term"
+                  className="flex items-center gap-1 px-2 py-1 rounded-lg text-xs font-grotesk transition-all duration-200 cursor-pointer disabled:cursor-default"
+                  style={{
+                    background: "transparent",
+                    border: "1px solid rgba(255,255,255,0.08)",
+                    color: "var(--foreground-muted)",
+                  }}
+                  onMouseEnter={e => {
+                    (e.currentTarget as HTMLButtonElement).style.borderColor = "rgba(16,185,129,0.35)";
+                    (e.currentTarget as HTMLButtonElement).style.color = "#6EE7B7";
+                  }}
+                  onMouseLeave={e => {
+                    (e.currentTarget as HTMLButtonElement).style.borderColor = "rgba(255,255,255,0.08)";
+                    (e.currentTarget as HTMLButtonElement).style.color = "var(--foreground-muted)";
+                  }}
+                >
+                  👍
+                </button>
+                <button
+                  onClick={() => handleVote("dislike")}
+                  disabled={voting}
+                  aria-label="Dislike this term"
+                  className="flex items-center gap-1 px-2 py-1 rounded-lg text-xs font-grotesk transition-all duration-200 cursor-pointer disabled:cursor-default"
+                  style={{
+                    background: "transparent",
+                    border: "1px solid rgba(255,255,255,0.08)",
+                    color: "var(--foreground-muted)",
+                  }}
+                  onMouseEnter={e => {
+                    (e.currentTarget as HTMLButtonElement).style.borderColor = "rgba(220,38,38,0.35)";
+                    (e.currentTarget as HTMLButtonElement).style.color = "#F87171";
+                  }}
+                  onMouseLeave={e => {
+                    (e.currentTarget as HTMLButtonElement).style.borderColor = "rgba(255,255,255,0.08)";
+                    (e.currentTarget as HTMLButtonElement).style.color = "var(--foreground-muted)";
+                  }}
+                >
+                  👎
+                </button>
+              </>
+            )}
+          </div>
+        )}
       </div>
     </article>
   );

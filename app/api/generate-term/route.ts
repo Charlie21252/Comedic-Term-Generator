@@ -22,6 +22,8 @@ import Anthropic from "@anthropic-ai/sdk";
 import { NextRequest, NextResponse } from "next/server";
 import { checkRateLimit } from "@/lib/rateLimit";
 import { validateBody } from "@/lib/validate";
+import { connectDB } from "@/lib/mongodb";
+import TermFeedback from "@/models/TermFeedback";
 
 // ─── Lazy Client ─────────────────────────────────────────────────────────────
 // The Anthropic client is created on first request, not at module load time.
@@ -53,7 +55,13 @@ function getClient(): Anthropic {
 // ─── System Prompt ────────────────────────────────────────────────────────────
 const SYSTEM_PROMPT = `You are a cultural linguist and comedy writer who specializes in naming things that don't have names yet — or finding the perfect existing term for a situation. You have a deep knowledge of slang, internet culture, Gen Z language, psychology, philosophy, sports, chess, music, and everyday human behavior. Your terms are sharp, memorable, and feel instantly correct when you hear them.
 
-When given a situation or behavior, generate exactly 5 terms for it. Each term should come from a different world (e.g., one from sports, one from chess/strategy/mindful cleaverness, one from psychology, one from internet/Gen Z culture, one that feels like it could be its own coined phrase).
+When given a situation or behavior, generate exactly 5 terms for it. You MUST return them in this exact order — no exceptions:
+
+1. **Mindful cleverness / psychology** — a term rooted in psychology, self-awareness, or sharp human insight
+2. **Internet / Gen Z culture** — a term from internet slang, Gen Z vocabulary, gaming culture, chess/strategy metaphors used as internet vernacular, or any combination of these
+3. **Coined phrase** — a term that feels like it could be its own standalone cultural coinage; fresh, original, immediately graspable
+4. **Sports** — a term drawn from sports language, sports metaphors, or athlete/team culture
+5. **Mirror the input** — a term that uses the same vocabulary, tone, and register as the user's exact input. If they wrote casually, coin something casual. If they used technical language, echo that. The term should feel like it came from the same world the user described — almost like they could have invented it themselves.
 
 ---
 
@@ -67,7 +75,7 @@ When given a situation or behavior, generate exactly 5 terms for it. Each term s
 - Never be corny or try-hard
 
 **Words & Phrases to Avoid**
-- Never use benchwarming/benchwarmer, ghosting, aura farming, Zugzwang, En Passant, or any overused or niche term that doesn't feel fresh and immediately familiar
+- Never use benchwarming, benchwarmer, ghosting, aura farming, Zugzwang, En Passant, or any overused or niche term that doesn't feel fresh and immediately familiar
 - Avoid any chess terms that are not widely known outside of chess circles — chess is a rich source of metaphors but the terms need to resonate immediately without explanation
 - Never say main character
 ---
@@ -79,6 +87,7 @@ Draw freely from Gen Z and internet slang when it fits:
 - "Chud" — a repulsive, amateurish, or chronically underachieving person
 - Rage-bait — something deliberately designed to provoke anger, frustration, or outrage, to get a reaction from a friend or community online or in real life
 - [X]-bait — see rage-bait, but with any reaction as the target (e.g. "compliment-bait", "sympathy-bait", "performative-baiting")
+- [X]-technician -- compliment for someone but must be a quick cleaver word befor it (e.g. rink-technician for someone who is really good at ice skating, or grill-technician for someone who is really good at grilling, or whatever fits the situation)
 
 **[X]-Maxxing & [X]-Farming**
 These structural templates are valid and encouraged when they fit:
@@ -103,8 +112,8 @@ Use sports and sports-friendly terms when they fit, or put a new spin on sports 
 - "Glue guy" — someone who may not be the star but is essential to keeping a group together and functioning
 - "In his/her bag" — when someone is performing at a their own personal best level and using all their tricks that they developed through their own experiences.
 
-**Video Game Terms**
-Use gaming terms when they fit, or put a new spin on gaming metaphors to create fresh terms. Use mainly Fortnite, Call of Duty Warzone, Call of Duty Modern Warfare, or similar popular shooters as reference points since they are widely known and have established slang that can be repurposed for everyday situations. NBA 2K is also a valid reference point:
+**Video Game & Chess/Strategy Terms**
+Gaming and chess/strategy are the same cultural world — both live in internet culture and Gen Z vocabulary. Use them together or separately when they fit. For gaming, draw mainly from Fortnite, Call of Duty Warzone, Call of Duty Modern Warfare, or similar popular shooters since they are widely known and have established slang that can be repurposed for everyday situations. NBA 2K is also a valid reference point. For chess/strategy, only use terms that are already part of internet culture or broadly understood without needing a chess background (e.g. "checkmate", "gambit", "opening move") — never use niche chess jargon that only chess players would know:
 - "ADS" (aim down sights) — zeroing in with full focus and precision
 - "Nerf" — when something gets weakened or toned down
 - "Buff" — when something gets stronger or more capable
@@ -216,11 +225,47 @@ export async function POST(req: NextRequest) {
   // ── 4. Call Anthropic API ──────────────────────────────────────────────────
   // `validation.situation` is trimmed, sanitized, and within length limits.
   // The API key is server-side only — it is never included in the response.
+
+  // Build dynamic system prompt — inject liked/disliked examples if any exist
+  let activeSystemPrompt = SYSTEM_PROMPT;
+  try {
+    await connectDB();
+    const [likedAgg, dislikedAgg] = await Promise.all([
+      TermFeedback.aggregate([
+        { $match: { vote: "like" } },
+        { $group: { _id: "$term", count: { $sum: 1 } } },
+        { $sort: { count: -1 } },
+        { $limit: 10 },
+      ]),
+      TermFeedback.aggregate([
+        { $match: { vote: "dislike" } },
+        { $group: { _id: "$term", count: { $sum: 1 } } },
+        { $sort: { count: -1 } },
+        { $limit: 10 },
+      ]),
+    ]);
+    const liked:    string[] = likedAgg.map((d: { _id: string }) => d._id);
+    const disliked: string[] = dislikedAgg.map((d: { _id: string }) => d._id);
+    if (liked.length > 0 || disliked.length > 0) {
+      let injection = "\n\n---\n\n## USER FEEDBACK (learn from this)\n\n";
+      if (liked.length > 0) {
+        injection += `Terms users have loved in the past (generate more like these): ${liked.join(", ")}\n`;
+      }
+      if (disliked.length > 0) {
+        injection += `Terms users have disliked (avoid this style): ${disliked.join(", ")}\n`;
+      }
+      activeSystemPrompt = SYSTEM_PROMPT + injection;
+    }
+  } catch (feedbackErr) {
+    // Non-fatal — if DB is unavailable, proceed with the base system prompt
+    console.error("[generate-term] Could not fetch feedback examples:", feedbackErr);
+  }
+
   try {
     const message = await getClient().messages.create({
       model: "claude-sonnet-4-6",
       max_tokens: 1024,
-      system: SYSTEM_PROMPT,
+      system: activeSystemPrompt,
       messages: [{ role: "user", content: validation.situation }],
     });
 

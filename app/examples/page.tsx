@@ -36,32 +36,6 @@ const examples = [
     ],
   },
   {
-    situation: "When you catch someone in a lie with undeniable proof",
-    terms: [
-      {
-        term: "Checkmate",
-        definition:
-          "The moment someone's lie is cornered with no escape route left.",
-        example:
-          "He said he was home all night — then she showed the Instagram story. Checkmate.",
-      },
-      {
-        term: "Hard Evidence",
-        definition:
-          "When the proof you drop is so airtight there's no angle left to spin it from.",
-        example:
-          "She said she was home all night — bro I had the Instagram story with the location tag, that was hard evidence.",
-      },
-      {
-        term: "The Killcam",
-        definition:
-          "Showing someone the undeniable replay of exactly what they did, frame by frame, no room to argue.",
-        example:
-          "She tried to deny the whole thing and I just pulled up the texts — full killcam, she saw everything.",
-      },
-    ],
-  },
-  {
     situation: "When a reference only certain people will understand",
     terms: [
       {
@@ -84,32 +58,6 @@ const examples = [
           "A subtle acknowledgment between people who share the same reference point.",
         example:
           "It was a total frequency check when I initiated that niche joke.",
-      },
-    ],
-  },
-  {
-    situation: "When someone talks a lot but says absolutely nothing",
-    terms: [
-      {
-        term: "Word Salad",
-        definition:
-          "A dense tangle of language that sounds substantive but communicates nothing.",
-        example:
-          "His whole answer was word salad — I still don't know what the plan is.",
-      },
-      {
-        term: "Verbal Fog",
-        definition:
-          "When someone uses volume of words to obscure the absence of meaning.",
-        example:
-          "She verbal fogged the entire meeting. Forty minutes, zero decisions.",
-      },
-      {
-        term: "Hot Air",
-        definition:
-          "Confident-sounding speech with zero substance behind it.",
-        example:
-          "That pitch was pure hot air. No numbers, no plan, just vibes.",
       },
     ],
   },
@@ -140,32 +88,6 @@ const examples = [
     ],
   },
   {
-    situation: "When someone acts completely different around certain people",
-    terms: [
-      {
-        term: "Away Kit",
-        definition:
-          "The alternate version of yourself you put on when the home crowd isn't watching.",
-        example:
-          "Soon as his coworkers showed up he switched to full away kit — barely recognized him.",
-      },
-      {
-        term: "Lobby Diff",
-        definition:
-          "When someone plays like a completely different person depending on who's in the room, same way your whole strategy changes based on who dropped into your lobby.",
-        example:
-          "He's super confident at home but put him around her friends? Lobby diff is real.",
-      },
-      {
-        term: "Code-Switching Speedrun",
-        definition:
-          "When someone flips their entire personality the second a new person walks in — no transition, no warning, just a full instant swap.",
-        example:
-          "His boss walked in and he went full code-switching speedrun, I've never seen a human change that fast.",
-      },
-    ],
-  },
-  {
     situation:
       "When something is obviously going to go wrong but everyone ignores it",
     terms: [
@@ -189,6 +111,84 @@ const examples = [
           "When a group collectively agrees not to see something obvious so the illusion of momentum can survive a little longer.",
         example:
           "The whole team was crowd-blindsided — investors, management, everyone. Only the interns were asking the real questions.",
+      },
+    ],
+  },
+  {
+    situation: "When you catch someone in a lie with undeniable proof",
+    terms: [
+      {
+        term: "Checkmate",
+        definition:
+          "The moment someone's lie is cornered with no escape route left.",
+        example:
+          "He said he was home all night — then she showed the Instagram story. Checkmate.",
+      },
+      {
+        term: "Hard Evidence",
+        definition:
+          "When the proof you drop is so airtight there's no angle left to spin it from.",
+        example:
+          "She said she was home all night — bro I had the Instagram story with the location tag, that was hard evidence.",
+      },
+      {
+        term: "The Killcam",
+        definition:
+          "Showing someone the undeniable replay of exactly what they did, frame by frame, no room to argue.",
+        example:
+          "She tried to deny the whole thing and I just pulled up the texts — full killcam, she saw everything.",
+      },
+    ],
+  },
+  {
+    situation: "When someone talks a lot but says absolutely nothing",
+    terms: [
+      {
+        term: "Word Salad",
+        definition:
+          "A dense tangle of language that sounds substantive but communicates nothing.",
+        example:
+          "His whole answer was word salad — I still don't know what the plan is.",
+      },
+      {
+        term: "Verbal Fog",
+        definition:
+          "When someone uses volume of words to obscure the absence of meaning.",
+        example:
+          "She verbal fogged the entire meeting. Forty minutes, zero decisions.",
+      },
+      {
+        term: "Hot Air",
+        definition:
+          "Confident-sounding speech with zero substance behind it.",
+        example:
+          "That pitch was pure hot air. No numbers, no plan, just vibes.",
+      },
+    ],
+  },
+  {
+    situation: "When someone acts completely different around certain people",
+    terms: [
+      {
+        term: "Away Kit",
+        definition:
+          "The alternate version of yourself you put on when the home crowd isn't watching.",
+        example:
+          "Soon as his coworkers showed up he switched to full away kit — barely recognized him.",
+      },
+      {
+        term: "Lobby Diff",
+        definition:
+          "When someone plays like a completely different person depending on who's in the room, same way your whole strategy changes based on who dropped into your lobby.",
+        example:
+          "He's super confident at home but put him around her friends? Lobby diff is real.",
+      },
+      {
+        term: "Code-Switching Speedrun",
+        definition:
+          "When someone flips their entire personality the second a new person walks in — no transition, no warning, just a full instant swap.",
+        example:
+          "His boss walked in and he went full code-switching speedrun, I've never seen a human change that fast.",
       },
     ],
   },
@@ -264,7 +264,7 @@ export default function ExamplesPage() {
               </h2>
               <div className="flex flex-col gap-3">
                 {group.terms.map((term, ti) => (
-                  <TermCard key={ti} term={term} index={ti} />
+                  <TermCard key={ti} term={term} index={ti} situation={null} />
                 ))}
               </div>
             </section>
