@@ -1,9 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useCallback, useEffect } from "react";
 import Link from "next/link";
 import TermForm from "@/components/TermForm";
 import TermCard from "@/components/TermCard";
+import PaywallModal from "@/components/PaywallModal";
+import UnlockBenefitsModal from "@/components/UnlockBenefitsModal";
 
 interface Term {
   term: string;
@@ -11,13 +13,55 @@ interface Term {
   example: string;
 }
 
+const FREE_LIMIT = 3;
+
+function getTodayString() {
+  return new Date().toISOString().slice(0, 10);
+}
+
+function getGenerationCount(): number {
+  const storedDate = localStorage.getItem("generationDate");
+  const today = getTodayString();
+  if (storedDate !== today) {
+    localStorage.setItem("generationDate", today);
+    localStorage.setItem("generationCount", "0");
+    return 0;
+  }
+  return parseInt(localStorage.getItem("generationCount") ?? "0", 10);
+}
+
+function incrementGenerationCount() {
+  const count = getGenerationCount();
+  localStorage.setItem("generationCount", String(count + 1));
+}
+
+function isUnlocked(): boolean {
+  return !!localStorage.getItem("licenseKey");
+}
+
 export default function Home() {
   const [terms, setTerms] = useState<Term[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [lastSituation, setLastSituation] = useState<string | null>(null);
+  const [showPaywall, setShowPaywall] = useState(false);
+  const [showBenefits, setShowBenefits] = useState(false);
+  const [unlocked, setUnlocked] = useState(false);
 
-  const generateTerms = async (situation: string) => {
+  useEffect(() => {
+    setUnlocked(!!localStorage.getItem("licenseKey"));
+  }, []);
+
+  const generateTerms = useCallback(async (situation: string) => {
+    // Check generation limit for free users
+    if (!isUnlocked()) {
+      const count = getGenerationCount();
+      if (count >= FREE_LIMIT) {
+        setShowPaywall(true);
+        return;
+      }
+    }
+
     setIsLoading(true);
     setError(null);
     setLastSituation(situation);
@@ -30,7 +74,6 @@ export default function Home() {
       });
 
       if (res.status === 429) {
-        // Graceful rate-limit feedback — read Retry-After if present
         const retryAfter = res.headers.get("Retry-After");
         const seconds = retryAfter ? parseInt(retryAfter, 10) : 60;
         setError(`Slow down — you've hit the limit. Try again in ${seconds}s.`);
@@ -38,7 +81,6 @@ export default function Home() {
       }
 
       if (res.status === 400) {
-        // Validation error — surface the server message directly
         const data = await res.json().catch(() => ({}));
         setError(data.error ?? "Invalid input. Please check your text and try again.");
         return;
@@ -51,14 +93,18 @@ export default function Home() {
 
       const data = await res.json();
       setTerms(data.terms);
+
+      // Increment count only after a successful generation
+      if (!isUnlocked()) {
+        incrementGenerationCount();
+      }
     } catch (err) {
-      // Network-level failure (offline, DNS, etc.)
       console.error("[generate-term] fetch error:", err);
       setError("Could not reach the server. Check your connection and try again.");
     } finally {
       setIsLoading(false);
     }
-  };
+  }, []);
 
   return (
     <main className="min-h-dvh">
@@ -92,7 +138,7 @@ export default function Home() {
       <div className="relative max-w-[680px] mx-auto px-5 pt-[72px] pb-28">
 
         {/* Header */}
-        <header className="mb-12">
+        <header className="mb-10">
           {/* Pill badge */}
           <div className="inline-flex items-center gap-2 mb-8 px-3 py-1.5 rounded-full"
             style={{ background: "rgba(94,106,210,0.12)", border: "1px solid rgba(94,106,210,0.22)" }}>
@@ -107,7 +153,7 @@ export default function Home() {
           </div>
 
           {/* Title */}
-          <h1 className="font-archivo leading-[0.95] tracking-[-0.03em] mb-0">
+          <h1 className="font-archivo leading-[0.95] tracking-[-0.03em] mb-6">
             <span
               className="block text-[52px] sm:text-[68px] font-[300]"
               style={{ color: "var(--foreground-muted)" }}
@@ -121,6 +167,90 @@ export default function Home() {
               Term Generator
             </span>
           </h1>
+
+          {/* Nav links + unlock CTA */}
+          <nav className="flex items-center gap-2 flex-wrap" aria-label="Site navigation">
+            <Link
+              href="/examples"
+              className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-grotesk font-medium tracking-[0.04em] transition-all duration-200"
+              style={{
+                background: "rgba(255,255,255,0.04)",
+                border: "1px solid rgba(255,255,255,0.08)",
+                color: "var(--foreground-muted)",
+              }}
+              onMouseEnter={e => {
+                (e.currentTarget as HTMLAnchorElement).style.color = "var(--foreground)";
+                (e.currentTarget as HTMLAnchorElement).style.borderColor = "rgba(255,255,255,0.15)";
+                (e.currentTarget as HTMLAnchorElement).style.background = "rgba(255,255,255,0.07)";
+              }}
+              onMouseLeave={e => {
+                (e.currentTarget as HTMLAnchorElement).style.color = "var(--foreground-muted)";
+                (e.currentTarget as HTMLAnchorElement).style.borderColor = "rgba(255,255,255,0.08)";
+                (e.currentTarget as HTMLAnchorElement).style.background = "rgba(255,255,255,0.04)";
+              }}
+            >
+              <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                <rect x="1" y="1" width="4" height="4" rx="0.8" />
+                <rect x="7" y="1" width="4" height="4" rx="0.8" />
+                <rect x="1" y="7" width="4" height="4" rx="0.8" />
+                <rect x="7" y="7" width="4" height="4" rx="0.8" />
+              </svg>
+              Examples
+            </Link>
+            <Link
+              href="/library"
+              className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-grotesk font-medium tracking-[0.04em] transition-all duration-200"
+              style={{
+                background: "rgba(255,255,255,0.04)",
+                border: "1px solid rgba(255,255,255,0.08)",
+                color: "var(--foreground-muted)",
+              }}
+              onMouseEnter={e => {
+                (e.currentTarget as HTMLAnchorElement).style.color = "var(--foreground)";
+                (e.currentTarget as HTMLAnchorElement).style.borderColor = "rgba(255,255,255,0.15)";
+                (e.currentTarget as HTMLAnchorElement).style.background = "rgba(255,255,255,0.07)";
+              }}
+              onMouseLeave={e => {
+                (e.currentTarget as HTMLAnchorElement).style.color = "var(--foreground-muted)";
+                (e.currentTarget as HTMLAnchorElement).style.borderColor = "rgba(255,255,255,0.08)";
+                (e.currentTarget as HTMLAnchorElement).style.background = "rgba(255,255,255,0.04)";
+              }}
+            >
+              <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                <path d="M2 1.5h8a.5.5 0 0 1 .5.5v8l-4-2-4 2V2a.5.5 0 0 1 .5-.5z" />
+              </svg>
+              Library
+            </Link>
+
+            {/* Unlock button — only shown to free users */}
+            {!unlocked && (
+              <button
+                onClick={() => setShowBenefits(true)}
+                className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-grotesk font-medium tracking-[0.04em] transition-all duration-200 cursor-pointer"
+                style={{
+                  background: "rgba(94,106,210,0.1)",
+                  border: "1px solid rgba(94,106,210,0.28)",
+                  color: "#9BA3F5",
+                }}
+                onMouseEnter={e => {
+                  (e.currentTarget as HTMLButtonElement).style.background = "rgba(94,106,210,0.18)";
+                  (e.currentTarget as HTMLButtonElement).style.borderColor = "rgba(94,106,210,0.45)";
+                  (e.currentTarget as HTMLButtonElement).style.color = "#BFC5F8";
+                }}
+                onMouseLeave={e => {
+                  (e.currentTarget as HTMLButtonElement).style.background = "rgba(94,106,210,0.1)";
+                  (e.currentTarget as HTMLButtonElement).style.borderColor = "rgba(94,106,210,0.28)";
+                  (e.currentTarget as HTMLButtonElement).style.color = "#9BA3F5";
+                }}
+              >
+                <svg width="11" height="11" viewBox="0 0 11 11" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  <rect x="1.5" y="5" width="8" height="5.5" rx="1" />
+                  <path d="M3.5 5V3.5a2 2 0 0 1 4 0V5" />
+                </svg>
+                Unlock Full Access
+              </button>
+            )}
+          </nav>
         </header>
 
         {/* Form */}
@@ -200,16 +330,16 @@ export default function Home() {
 
       {/* Footer */}
       <footer className="pb-8 text-center">
-        <Link
-          href="/examples"
-          className="text-xs font-medium tracking-[0.08em] uppercase transition-colors duration-200"
-          style={{ color: "var(--foreground-muted)" }}
-          onMouseEnter={e => ((e.currentTarget as HTMLAnchorElement).style.color = "var(--foreground)")}
-          onMouseLeave={e => ((e.currentTarget as HTMLAnchorElement).style.color = "var(--foreground-muted)")}
-        >
-          Examples
-        </Link>
+        <span className="text-xs" style={{ color: "rgba(138,143,152,0.35)" }}>
+          comedicterm.com
+        </span>
       </footer>
+
+      {/* Paywall modal */}
+      {showPaywall && <PaywallModal onClose={() => setShowPaywall(false)} />}
+
+      {/* Benefits modal */}
+      {showBenefits && <UnlockBenefitsModal onClose={() => setShowBenefits(false)} />}
     </main>
   );
 }

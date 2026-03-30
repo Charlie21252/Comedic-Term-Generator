@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 interface Term {
   term: string;
@@ -30,12 +30,36 @@ export default function TermCard({
   const [hovered, setHovered]   = useState(false);
   const [voted, setVoted]       = useState<"like" | "dislike" | null>(null);
   const [voting, setVoting]     = useState(false);
+  const [saved, setSaved]       = useState(false);
+  const [saving, setSaving]     = useState(false);
+  const [licenseKey, setLicenseKey] = useState<string | null>(null);
   const accent = ACCENTS[index % ACCENTS.length];
+
+  useEffect(() => {
+    setLicenseKey(localStorage.getItem("licenseKey"));
+  }, []);
 
   const handleCopy = async () => {
     await navigator.clipboard.writeText(term.term);
     setCopied(true);
     setTimeout(() => setCopied(false), 2200);
+  };
+
+  const handleSave = async () => {
+    if (!licenseKey || !situation || saving || saved) return;
+    setSaving(true);
+    try {
+      await fetch("/api/library", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ licenseKey, term: term.term, situation }),
+      });
+      setSaved(true);
+    } catch {
+      // Silently fail — save is non-critical
+    } finally {
+      setSaving(false);
+    }
   };
 
   const handleVote = async (vote: "like" | "dislike") => {
@@ -151,7 +175,7 @@ export default function TermCard({
 
         {/* Feedback */}
         {situation && (
-          <div className="flex items-center gap-2 mt-1">
+          <div className="flex items-center gap-2 mt-1 flex-wrap">
             {voted ? (
               <span
                 className="font-grotesk text-xs"
@@ -204,6 +228,58 @@ export default function TermCard({
                   👎
                 </button>
               </>
+            )}
+
+            {/* Save to library */}
+            {saved ? (
+              <span
+                className="font-grotesk text-xs ml-1"
+                style={{ color: "#6EE7B7" }}
+              >
+                Saved!
+              </span>
+            ) : licenseKey ? (
+              <button
+                onClick={handleSave}
+                disabled={saving}
+                aria-label="Save to library"
+                className="flex items-center gap-1.5 px-2 py-1 rounded-lg text-xs font-grotesk transition-all duration-200 cursor-pointer disabled:cursor-default"
+                style={{
+                  background: "transparent",
+                  border: "1px solid rgba(255,255,255,0.08)",
+                  color: "var(--foreground-muted)",
+                }}
+                onMouseEnter={e => {
+                  (e.currentTarget as HTMLButtonElement).style.borderColor = "rgba(94,106,210,0.4)";
+                  (e.currentTarget as HTMLButtonElement).style.color = "#9BA3F5";
+                }}
+                onMouseLeave={e => {
+                  (e.currentTarget as HTMLButtonElement).style.borderColor = "rgba(255,255,255,0.08)";
+                  (e.currentTarget as HTMLButtonElement).style.color = "var(--foreground-muted)";
+                }}
+              >
+                <svg width="11" height="11" viewBox="0 0 11 11" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  <path d="M2 1h7a1 1 0 0 1 1 1v8l-4.5-2L1 10V2a1 1 0 0 1 1-1z" />
+                </svg>
+                {saving ? "Saving..." : "Save"}
+              </button>
+            ) : (
+              <button
+                disabled
+                title="Unlock to save terms"
+                aria-label="Unlock to save terms"
+                className="flex items-center gap-1.5 px-2 py-1 rounded-lg text-xs font-grotesk cursor-not-allowed"
+                style={{
+                  background: "transparent",
+                  border: "1px solid rgba(255,255,255,0.05)",
+                  color: "rgba(138,143,152,0.4)",
+                }}
+              >
+                <svg width="11" height="11" viewBox="0 0 11 11" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  <path d="M2 1h7a1 1 0 0 1 1 1v8l-4.5-2L1 10V2a1 1 0 0 1 1-1z" />
+                </svg>
+                Save
+              </button>
             )}
           </div>
         )}
