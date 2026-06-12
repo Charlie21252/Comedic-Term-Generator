@@ -68,7 +68,7 @@ export default function UnlockModal({ onClose }: { onClose: () => void }) {
               border: "1px solid rgba(255,255,255,0.1)",
               color: "var(--foreground)",
             }}
-            onFocus={e => (e.currentTarget.style.borderColor = "rgba(94,106,210,0.6)")}
+            onFocus={e => (e.currentTarget.style.borderColor = "rgba(255,107,74,0.6)")}
             onBlur={e => (e.currentTarget.style.borderColor = "rgba(255,255,255,0.1)")}
             autoFocus
           />
@@ -81,7 +81,7 @@ export default function UnlockModal({ onClose }: { onClose: () => void }) {
             type="submit"
             disabled={loading || !key.trim()}
             className="w-full py-3 rounded-xl font-grotesk font-semibold text-sm transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
-            style={{ background: "#5E6AD2", color: "#fff" }}
+            style={{ background: "#FF6B4A", color: "#fff" }}
           >
             {loading ? "Verifying..." : "Unlock Access"}
           </button>
@@ -94,7 +94,7 @@ export default function UnlockModal({ onClose }: { onClose: () => void }) {
             rel="noopener noreferrer"
             className="text-xs transition-colors duration-200"
             style={{ color: "var(--foreground-muted)" }}
-            onMouseEnter={e => ((e.currentTarget as HTMLAnchorElement).style.color = "#9BA3F5")}
+            onMouseEnter={e => ((e.currentTarget as HTMLAnchorElement).style.color = "#FFB199")}
             onMouseLeave={e => ((e.currentTarget as HTMLAnchorElement).style.color = "var(--foreground-muted)")}
           >
             Get your key here →

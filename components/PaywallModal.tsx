@@ -24,9 +24,9 @@ export default function PaywallModal({ onClose }: { onClose: () => void }) {
         {/* Icon */}
         <div
           className="inline-flex items-center justify-center w-12 h-12 rounded-full mb-5 mx-auto"
-          style={{ background: "rgba(94,106,210,0.12)", border: "1px solid rgba(94,106,210,0.22)" }}
+          style={{ background: "rgba(255,107,74,0.12)", border: "1px solid rgba(255,107,74,0.22)" }}
         >
-          <svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="#9BA3F5" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+          <svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="#FFB199" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
             <rect x="3" y="10" width="16" height="11" rx="2" />
             <path d="M7 10V6a4 4 0 0 1 8 0v4" />
           </svg>
@@ -48,9 +48,9 @@ export default function PaywallModal({ onClose }: { onClose: () => void }) {
             target="_blank"
             rel="noopener noreferrer"
             className="block w-full py-3 rounded-xl font-grotesk font-semibold text-sm transition-all duration-200"
-            style={{ background: "#5E6AD2", color: "#fff" }}
+            style={{ background: "#FF6B4A", color: "#fff" }}
             onMouseEnter={e => ((e.currentTarget as HTMLAnchorElement).style.background = "#6B75DB")}
-            onMouseLeave={e => ((e.currentTarget as HTMLAnchorElement).style.background = "#5E6AD2")}
+            onMouseLeave={e => ((e.currentTarget as HTMLAnchorElement).style.background = "#FF6B4A")}
           >
             Unlock Unlimited Access — $4.99
           </a>

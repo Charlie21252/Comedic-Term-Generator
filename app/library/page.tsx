@@ -71,23 +71,13 @@ export default function LibraryPage() {
       <div aria-hidden="true" className="fixed inset-0 pointer-events-none overflow-hidden">
         <div
           className="absolute top-[-120px] left-1/2 -translate-x-1/2 w-[700px] h-[480px] rounded-full opacity-[0.07]"
-          style={{ background: "radial-gradient(ellipse, #5E6AD2 0%, transparent 70%)" }}
+          style={{ background: "radial-gradient(ellipse, #FF6B4A 0%, transparent 70%)" }}
         />
       </div>
 
       <div className="relative max-w-[680px] mx-auto px-5 pt-[72px] pb-28">
         {/* Header */}
         <header className="mb-12">
-          <div className="inline-flex items-center gap-2 mb-8 px-3 py-1.5 rounded-full"
-            style={{ background: "rgba(94,106,210,0.12)", border: "1px solid rgba(94,106,210,0.22)" }}>
-            <span
-              className="w-1.5 h-1.5 rounded-full"
-              style={{ background: "#5E6AD2", boxShadow: "0 0 6px #5E6AD2" }}
-            />
-            <span className="text-[11px] font-semibold tracking-[0.12em] uppercase" style={{ color: "#9BA3F5" }}>
-              Your Collection
-            </span>
-          </div>
           <h1 className="font-archivo leading-[0.95] tracking-[-0.03em] mb-6">
             <span className="block text-[52px] sm:text-[68px] font-[300]" style={{ color: "var(--foreground-muted)" }}>
               Terms
@@ -166,9 +156,9 @@ export default function LibraryPage() {
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-block px-6 py-3 rounded-xl font-grotesk font-semibold text-sm transition-all duration-200"
-                style={{ background: "#5E6AD2", color: "#fff" }}
+                style={{ background: "#FF6B4A", color: "#fff" }}
                 onMouseEnter={e => ((e.currentTarget as HTMLAnchorElement).style.background = "#6B75DB")}
-                onMouseLeave={e => ((e.currentTarget as HTMLAnchorElement).style.background = "#5E6AD2")}
+                onMouseLeave={e => ((e.currentTarget as HTMLAnchorElement).style.background = "#FF6B4A")}
               >
                 Unlock Unlimited Access — $4.99
               </a>
@@ -231,9 +221,9 @@ export default function LibraryPage() {
             <Link
               href="/"
               className="text-sm font-medium transition-colors duration-200"
-              style={{ color: "#9BA3F5" }}
+              style={{ color: "#FFB199" }}
               onMouseEnter={e => ((e.currentTarget as HTMLAnchorElement).style.color = "var(--foreground)")}
-              onMouseLeave={e => ((e.currentTarget as HTMLAnchorElement).style.color = "#9BA3F5")}
+              onMouseLeave={e => ((e.currentTarget as HTMLAnchorElement).style.color = "#FFB199")}
             >
               Generate some terms →
             </Link>

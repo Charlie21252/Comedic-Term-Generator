@@ -56,8 +56,8 @@ export default function TermForm({ onSubmit, isLoading }: Props) {
         className="relative rounded-2xl transition-all duration-300 easing-smooth"
         style={{
           background: "var(--surface)",
-          border: `1px solid ${focused ? "rgba(94,106,210,0.5)" : "var(--border)"}`,
-          boxShadow: focused ? "0 0 0 3px rgba(94,106,210,0.08), 0 0 28px rgba(94,106,210,0.1)" : "none",
+          border: `1px solid ${focused ? "rgba(255,107,74,0.5)" : "var(--border)"}`,
+          boxShadow: focused ? "0 0 0 3px rgba(255,107,74,0.08), 0 0 28px rgba(255,107,74,0.1)" : "none",
         }}
       >
         <textarea
@@ -102,15 +102,15 @@ export default function TermForm({ onSubmit, isLoading }: Props) {
           disabled={!canSubmit}
           className="relative flex items-center gap-2 px-5 py-2.5 rounded-xl font-grotesk font-semibold text-sm cursor-pointer transition-all duration-200 easing-smooth disabled:opacity-40 disabled:cursor-not-allowed"
           style={{
-            background: canSubmit ? "var(--accent)" : "rgba(94,106,210,0.4)",
+            background: canSubmit ? "var(--accent)" : "rgba(255,107,74,0.4)",
             color: "#fff",
-            boxShadow: canSubmit ? "0 0 24px rgba(94,106,210,0.3), 0 2px 8px rgba(0,0,0,0.3)" : "none",
+            boxShadow: canSubmit ? "0 0 24px rgba(255,107,74,0.3), 0 2px 8px rgba(0,0,0,0.3)" : "none",
           }}
           onMouseEnter={e => {
-            if (canSubmit) (e.currentTarget as HTMLButtonElement).style.boxShadow = "0 0 36px rgba(94,106,210,0.45), 0 2px 12px rgba(0,0,0,0.3)";
+            if (canSubmit) (e.currentTarget as HTMLButtonElement).style.boxShadow = "0 0 36px rgba(255,107,74,0.45), 0 2px 12px rgba(0,0,0,0.3)";
           }}
           onMouseLeave={e => {
-            if (canSubmit) (e.currentTarget as HTMLButtonElement).style.boxShadow = "0 0 24px rgba(94,106,210,0.3), 0 2px 8px rgba(0,0,0,0.3)";
+            if (canSubmit) (e.currentTarget as HTMLButtonElement).style.boxShadow = "0 0 24px rgba(255,107,74,0.3), 0 2px 8px rgba(0,0,0,0.3)";
           }}
         >
           {isLoading ? (
@@ -119,7 +119,7 @@ export default function TermForm({ onSubmit, isLoading }: Props) {
                 <circle cx="8" cy="8" r="6" stroke="rgba(255,255,255,0.25)" strokeWidth="2" />
                 <path d="M8 2a6 6 0 0 1 6 6" stroke="white" strokeWidth="2" strokeLinecap="round" />
               </svg>
-              Finding the words...
+              Brewing terms...
             </>
           ) : (
             <>

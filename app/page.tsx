@@ -127,11 +127,15 @@ export default function Home() {
           }),
         }}
       />
-      {/* Ambient blob — decorative, hidden from screen readers */}
+      {/* Ambient blobs — decorative, hidden from screen readers */}
       <div aria-hidden="true" className="fixed inset-0 pointer-events-none overflow-hidden">
         <div
           className="absolute top-[-120px] left-1/2 -translate-x-1/2 w-[700px] h-[480px] rounded-full opacity-[0.07]"
-          style={{ background: "radial-gradient(ellipse, #5E6AD2 0%, transparent 70%)" }}
+          style={{ background: "radial-gradient(ellipse, #FF6B4A 0%, transparent 70%)" }}
+        />
+        <div
+          className="absolute bottom-[-160px] right-[-120px] w-[520px] h-[420px] rounded-full opacity-[0.05]"
+          style={{ background: "radial-gradient(ellipse, #EC4899 0%, transparent 70%)" }}
         />
       </div>
 
@@ -139,19 +143,6 @@ export default function Home() {
 
         {/* Header */}
         <header className="mb-10">
-          {/* Pill badge */}
-          <div className="inline-flex items-center gap-2 mb-8 px-3 py-1.5 rounded-full"
-            style={{ background: "rgba(94,106,210,0.12)", border: "1px solid rgba(94,106,210,0.22)" }}>
-            <span
-              className="w-1.5 h-1.5 rounded-full"
-              style={{ background: "#5E6AD2", boxShadow: "0 0 6px #5E6AD2" }}
-            />
-            <span className="text-[11px] font-semibold tracking-[0.12em] uppercase"
-              style={{ color: "#9BA3F5" }}>
-              AI Word Engine
-            </span>
-          </div>
-
           {/* Title */}
           <h1 className="font-archivo leading-[0.95] tracking-[-0.03em] mb-6">
             <span
@@ -164,7 +155,7 @@ export default function Home() {
               className="block text-[52px] sm:text-[68px] font-[900]"
               style={{ color: "var(--foreground)" }}
             >
-              Term Generator
+              Term <span style={{ color: "#FF6B4A" }}>Generator</span>
             </span>
           </h1>
 
@@ -225,22 +216,23 @@ export default function Home() {
             {/* Unlock button — only shown to free users */}
             {!unlocked && (
               <button
+                type="button"
                 onClick={() => setShowBenefits(true)}
                 className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-grotesk font-medium tracking-[0.04em] transition-all duration-200 cursor-pointer"
                 style={{
-                  background: "rgba(94,106,210,0.1)",
-                  border: "1px solid rgba(94,106,210,0.28)",
-                  color: "#9BA3F5",
+                  background: "rgba(255,107,74,0.1)",
+                  border: "1px solid rgba(255,107,74,0.28)",
+                  color: "#FFB199",
                 }}
                 onMouseEnter={e => {
-                  (e.currentTarget as HTMLButtonElement).style.background = "rgba(94,106,210,0.18)";
-                  (e.currentTarget as HTMLButtonElement).style.borderColor = "rgba(94,106,210,0.45)";
-                  (e.currentTarget as HTMLButtonElement).style.color = "#BFC5F8";
+                  (e.currentTarget as HTMLButtonElement).style.background = "rgba(255,107,74,0.18)";
+                  (e.currentTarget as HTMLButtonElement).style.borderColor = "rgba(255,107,74,0.45)";
+                  (e.currentTarget as HTMLButtonElement).style.color = "#FFCDBB";
                 }}
                 onMouseLeave={e => {
-                  (e.currentTarget as HTMLButtonElement).style.background = "rgba(94,106,210,0.1)";
-                  (e.currentTarget as HTMLButtonElement).style.borderColor = "rgba(94,106,210,0.28)";
-                  (e.currentTarget as HTMLButtonElement).style.color = "#9BA3F5";
+                  (e.currentTarget as HTMLButtonElement).style.background = "rgba(255,107,74,0.1)";
+                  (e.currentTarget as HTMLButtonElement).style.borderColor = "rgba(255,107,74,0.28)";
+                  (e.currentTarget as HTMLButtonElement).style.color = "#FFB199";
                 }}
               >
                 <svg width="11" height="11" viewBox="0 0 11 11" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
@@ -258,7 +250,7 @@ export default function Home() {
 
         {/* Loading skeleton */}
         {isLoading && (
-          <div aria-live="polite" aria-label="Finding the words" className="mt-10 flex flex-col gap-3">
+          <div aria-live="polite" aria-label="Brewing terms" className="mt-10 flex flex-col gap-3">
             {[...Array(3)].map((_, i) => (
               <div
                 key={i}
@@ -271,7 +263,7 @@ export default function Home() {
               </div>
             ))}
             <p className="text-center text-sm mt-2" style={{ color: "var(--foreground-muted)" }}>
-              Finding the words...
+              Brewing terms in the lab...
             </p>
           </div>
         )}

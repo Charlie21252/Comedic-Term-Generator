@@ -8,13 +8,13 @@ interface Term {
   example: string;
 }
 
-// Each card gets a distinct gradient accent — cinematic palette
+// Each card gets a distinct gradient accent — comedy marquee palette
 const ACCENTS = [
-  { from: "#5E6AD2", to: "#8B93E8" }, // indigo
-  { from: "#7C3AED", to: "#A78BFA" }, // violet
-  { from: "#2563EB", to: "#60A5FA" }, // blue
-  { from: "#0891B2", to: "#67E8F9" }, // cyan
-  { from: "#059669", to: "#6EE7B7" }, // emerald
+  { from: "#FF6B4A", to: "#FFB199" }, // coral
+  { from: "#EC4899", to: "#FBA8D2" }, // hot pink
+  { from: "#FFAB1A", to: "#FFD680" }, // amber
+  { from: "#8B5CF6", to: "#C4B5FD" }, // violet
+  { from: "#06B6D4", to: "#7DD3FC" }, // cyan
 ];
 
 export default function TermCard({
@@ -88,7 +88,7 @@ export default function TermCard({
         background: hovered ? "rgba(255,255,255,0.05)" : "rgba(255,255,255,0.03)",
         border: `1px solid ${hovered ? "rgba(255,255,255,0.12)" : "rgba(255,255,255,0.07)"}`,
         boxShadow: hovered ? "0 8px 32px rgba(0,0,0,0.25)" : "none",
-        transform: hovered ? "translateY(-1px)" : "translateY(0)",
+        transform: hovered ? "translateY(-1px) rotate(-0.4deg)" : "translateY(0) rotate(0deg)",
       }}
     >
       {/* Left gradient accent bar */}
@@ -250,8 +250,8 @@ export default function TermCard({
                   color: "var(--foreground-muted)",
                 }}
                 onMouseEnter={e => {
-                  (e.currentTarget as HTMLButtonElement).style.borderColor = "rgba(94,106,210,0.4)";
-                  (e.currentTarget as HTMLButtonElement).style.color = "#9BA3F5";
+                  (e.currentTarget as HTMLButtonElement).style.borderColor = "rgba(255,107,74,0.4)";
+                  (e.currentTarget as HTMLButtonElement).style.color = "#FFB199";
                 }}
                 onMouseLeave={e => {
                   (e.currentTarget as HTMLButtonElement).style.borderColor = "rgba(255,255,255,0.08)";

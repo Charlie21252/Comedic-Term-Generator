@@ -56,13 +56,13 @@ export default function UnlockBenefitsModal({ onClose }: { onClose: () => void }
         <div className="mb-7">
           <div
             className="inline-flex items-center gap-2 mb-4 px-3 py-1.5 rounded-full"
-            style={{ background: "rgba(94,106,210,0.12)", border: "1px solid rgba(94,106,210,0.22)" }}
+            style={{ background: "rgba(255,107,74,0.12)", border: "1px solid rgba(255,107,74,0.22)" }}
           >
             <span
               className="w-1.5 h-1.5 rounded-full"
-              style={{ background: "#5E6AD2", boxShadow: "0 0 6px #5E6AD2" }}
+              style={{ background: "#FF6B4A", boxShadow: "0 0 6px #FF6B4A" }}
             />
-            <span className="text-[11px] font-semibold tracking-[0.12em] uppercase" style={{ color: "#9BA3F5" }}>
+            <span className="text-[11px] font-semibold tracking-[0.12em] uppercase" style={{ color: "#FFB199" }}>
               One-time unlock
             </span>
           </div>
@@ -87,7 +87,7 @@ export default function UnlockBenefitsModal({ onClose }: { onClose: () => void }
             >
               <span
                 className="shrink-0 flex items-center justify-center w-7 h-7 rounded-lg mt-0.5"
-                style={{ background: "rgba(94,106,210,0.12)", color: "#9BA3F5" }}
+                style={{ background: "rgba(255,107,74,0.12)", color: "#FFB199" }}
               >
                 {b.icon}
               </span>
@@ -119,9 +119,9 @@ export default function UnlockBenefitsModal({ onClose }: { onClose: () => void }
             target="_blank"
             rel="noopener noreferrer"
             className="block w-full py-3 rounded-xl font-grotesk font-semibold text-sm text-center transition-all duration-200"
-            style={{ background: "#5E6AD2", color: "#fff" }}
+            style={{ background: "#FF6B4A", color: "#fff" }}
             onMouseEnter={e => ((e.currentTarget as HTMLAnchorElement).style.background = "#6B75DB")}
-            onMouseLeave={e => ((e.currentTarget as HTMLAnchorElement).style.background = "#5E6AD2")}
+            onMouseLeave={e => ((e.currentTarget as HTMLAnchorElement).style.background = "#FF6B4A")}
           >
             Unlock Full Access — $4.99
           </a>

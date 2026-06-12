@@ -9,7 +9,7 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        accent: "#5E6AD2",
+        accent: "#FF6B4A",
       },
       fontFamily: {
         archivo: ["Archivo", "sans-serif"],
@@ -19,8 +19,8 @@ const config: Config = {
         smooth: "cubic-bezier(0.16, 1, 0.3, 1)",
       },
       boxShadow: {
-        "accent-glow": "0 0 32px rgba(94, 106, 210, 0.18)",
-        "accent-glow-md": "0 0 48px rgba(94, 106, 210, 0.25)",
+        "accent-glow": "0 0 32px rgba(255, 107, 74, 0.18)",
+        "accent-glow-md": "0 0 48px rgba(255, 107, 74, 0.25)",
       },
     },
   },

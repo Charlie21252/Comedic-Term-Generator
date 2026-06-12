@@ -199,9 +199,9 @@ const CTA = () => (
     href="/"
     className="inline-flex items-center gap-2 px-6 py-3 rounded-2xl font-semibold text-sm transition-all duration-200"
     style={{
-      background: "rgba(94,106,210,0.15)",
-      border: "1px solid rgba(94,106,210,0.3)",
-      color: "#9BA3F5",
+      background: "rgba(255,107,74,0.15)",
+      border: "1px solid rgba(255,107,74,0.3)",
+      color: "#FFB199",
     }}
   >
     Generate Your Own Terms →
@@ -215,7 +215,7 @@ export default function ExamplesPage() {
       <div aria-hidden="true" className="fixed inset-0 pointer-events-none overflow-hidden">
         <div
           className="absolute top-[-120px] left-1/2 -translate-x-1/2 w-[700px] h-[480px] rounded-full opacity-[0.07]"
-          style={{ background: "radial-gradient(ellipse, #5E6AD2 0%, transparent 70%)" }}
+          style={{ background: "radial-gradient(ellipse, #FF6B4A 0%, transparent 70%)" }}
         />
       </div>
 
@@ -255,12 +255,18 @@ export default function ExamplesPage() {
         <div className="flex flex-col gap-16">
           {examples.map((group, gi) => (
             <section key={gi} aria-labelledby={`situation-${gi}`}>
+              <span
+                className="block text-[11px] font-semibold tracking-[0.12em] uppercase mb-2"
+                style={{ color: "#FF6B4A" }}
+              >
+                The Situation
+              </span>
               <h2
                 id={`situation-${gi}`}
-                className="font-grotesk text-xs font-semibold tracking-[0.12em] uppercase mb-5"
-                style={{ color: "var(--foreground-muted)" }}
+                className="font-archivo font-bold text-xl sm:text-2xl leading-snug tracking-[-0.01em] mb-5"
+                style={{ color: "var(--foreground)" }}
               >
-                {group.situation}
+                &ldquo;{group.situation}&rdquo;
               </h2>
               <div className="flex flex-col gap-3">
                 {group.terms.map((term, ti) => (
