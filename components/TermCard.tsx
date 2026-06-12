@@ -32,6 +32,7 @@ export default function TermCard({
   const [voting, setVoting]     = useState(false);
   const [saved, setSaved]       = useState(false);
   const [saving, setSaving]     = useState(false);
+  const [shareToFeed, setShareToFeed] = useState(false);
   const [licenseKey, setLicenseKey] = useState<string | null>(null);
   const accent = ACCENTS[index % ACCENTS.length];
 
@@ -52,7 +53,7 @@ export default function TermCard({
       await fetch("/api/library", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ licenseKey, term: term.term, situation }),
+        body: JSON.stringify({ licenseKey, term: term.term, situation, shared: shareToFeed }),
       });
       setSaved(true);
     } catch {
@@ -236,33 +237,47 @@ export default function TermCard({
                 className="font-grotesk text-xs ml-1"
                 style={{ color: "#6EE7B7" }}
               >
-                Saved!
+                {shareToFeed ? "Saved & shared!" : "Saved!"}
               </span>
             ) : licenseKey ? (
-              <button
-                onClick={handleSave}
-                disabled={saving}
-                aria-label="Save to library"
-                className="flex items-center gap-1.5 px-2 py-1 rounded-lg text-xs font-grotesk transition-all duration-200 cursor-pointer disabled:cursor-default"
-                style={{
-                  background: "transparent",
-                  border: "1px solid rgba(255,255,255,0.08)",
-                  color: "var(--foreground-muted)",
-                }}
-                onMouseEnter={e => {
-                  (e.currentTarget as HTMLButtonElement).style.borderColor = "rgba(255,107,74,0.4)";
-                  (e.currentTarget as HTMLButtonElement).style.color = "#FFB199";
-                }}
-                onMouseLeave={e => {
-                  (e.currentTarget as HTMLButtonElement).style.borderColor = "rgba(255,255,255,0.08)";
-                  (e.currentTarget as HTMLButtonElement).style.color = "var(--foreground-muted)";
-                }}
-              >
-                <svg width="11" height="11" viewBox="0 0 11 11" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                  <path d="M2 1h7a1 1 0 0 1 1 1v8l-4.5-2L1 10V2a1 1 0 0 1 1-1z" />
-                </svg>
-                {saving ? "Saving..." : "Save"}
-              </button>
+              <>
+                <label
+                  className="flex items-center gap-1.5 px-2 py-1 rounded-lg text-xs font-grotesk cursor-pointer transition-colors duration-200"
+                  style={{ color: "var(--foreground-muted)" }}
+                >
+                  <input
+                    type="checkbox"
+                    checked={shareToFeed}
+                    onChange={e => setShareToFeed(e.target.checked)}
+                    style={{ accentColor: "var(--accent)" }}
+                  />
+                  Share to feed
+                </label>
+                <button
+                  onClick={handleSave}
+                  disabled={saving}
+                  aria-label="Save to library"
+                  className="flex items-center gap-1.5 px-2 py-1 rounded-lg text-xs font-grotesk transition-all duration-200 cursor-pointer disabled:cursor-default"
+                  style={{
+                    background: "transparent",
+                    border: "1px solid rgba(255,255,255,0.08)",
+                    color: "var(--foreground-muted)",
+                  }}
+                  onMouseEnter={e => {
+                    (e.currentTarget as HTMLButtonElement).style.borderColor = "rgba(255,107,74,0.4)";
+                    (e.currentTarget as HTMLButtonElement).style.color = "#FFB199";
+                  }}
+                  onMouseLeave={e => {
+                    (e.currentTarget as HTMLButtonElement).style.borderColor = "rgba(255,255,255,0.08)";
+                    (e.currentTarget as HTMLButtonElement).style.color = "var(--foreground-muted)";
+                  }}
+                >
+                  <svg width="11" height="11" viewBox="0 0 11 11" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                    <path d="M2 1h7a1 1 0 0 1 1 1v8l-4.5-2L1 10V2a1 1 0 0 1 1-1z" />
+                  </svg>
+                  {saving ? "Saving..." : "Save"}
+                </button>
+              </>
             ) : (
               <button
                 disabled

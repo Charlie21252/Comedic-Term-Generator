@@ -5,6 +5,7 @@ export interface ISavedTerm extends Document {
   term: string;
   situation: string;
   savedAt: Date;
+  shared: boolean;
 }
 
 const SavedTermSchema = new Schema<ISavedTerm>({
@@ -12,6 +13,9 @@ const SavedTermSchema = new Schema<ISavedTerm>({
   term: { type: String, required: true },
   situation: { type: String, required: true },
   savedAt: { type: Date, default: Date.now },
+  shared: { type: Boolean, default: false },
 });
+
+SavedTermSchema.index({ shared: 1, savedAt: -1 });
 
 export default models.SavedTerm || model<ISavedTerm>("SavedTerm", SavedTermSchema);

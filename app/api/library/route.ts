@@ -34,10 +34,11 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Invalid request body." }, { status: 400 });
   }
 
-  const { licenseKey, term, situation } = body as {
+  const { licenseKey, term, situation, shared } = body as {
     licenseKey?: string;
     term?: string;
     situation?: string;
+    shared?: boolean;
   };
 
   if (!licenseKey || !term || !situation) {
@@ -48,7 +49,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Invalid license key." }, { status: 403 });
   }
 
-  await SavedTerm.create({ licenseKey, term, situation });
+  await SavedTerm.create({ licenseKey, term, situation, shared: shared === true });
   return NextResponse.json({ success: true });
 }
 

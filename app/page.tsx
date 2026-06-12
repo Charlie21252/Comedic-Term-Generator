@@ -212,6 +212,31 @@ export default function Home() {
               </svg>
               Library
             </Link>
+            <Link
+              href="/feed"
+              className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-grotesk font-medium tracking-[0.04em] transition-all duration-200"
+              style={{
+                background: "rgba(255,255,255,0.04)",
+                border: "1px solid rgba(255,255,255,0.08)",
+                color: "var(--foreground-muted)",
+              }}
+              onMouseEnter={e => {
+                (e.currentTarget as HTMLAnchorElement).style.color = "var(--foreground)";
+                (e.currentTarget as HTMLAnchorElement).style.borderColor = "rgba(255,255,255,0.15)";
+                (e.currentTarget as HTMLAnchorElement).style.background = "rgba(255,255,255,0.07)";
+              }}
+              onMouseLeave={e => {
+                (e.currentTarget as HTMLAnchorElement).style.color = "var(--foreground-muted)";
+                (e.currentTarget as HTMLAnchorElement).style.borderColor = "rgba(255,255,255,0.08)";
+                (e.currentTarget as HTMLAnchorElement).style.background = "rgba(255,255,255,0.04)";
+              }}
+            >
+              <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                <path d="M2 2a8 8 0 0 1 8 8M2 2a4 4 0 0 1 4 4" />
+                <circle cx="2.5" cy="9.5" r="1" fill="currentColor" stroke="none" />
+              </svg>
+              Feed
+            </Link>
 
             {/* Unlock button — only shown to free users */}
             {!unlocked && (
